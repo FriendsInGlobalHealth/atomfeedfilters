@@ -1,23 +1,10 @@
-${moduleName}
+openmrs-module-atomfeedfilters
 ==========================
 
 Description
 -----------
-This is a very basic module which can be used as a starting point in creating a new module.
-
-Building from Source
---------------------
-You will need to have Java 1.6+ and Maven 2.x+ installed.  Use the command 'mvn package' to 
-compile and package the module.  The .omod file will be in the omod/target folder.
-
-Alternatively you can add the snippet provided in the [Creating Modules](https://wiki.openmrs.org/x/cAEr) page to your 
-omod/pom.xml and use the mvn command:
-
-    mvn package -P deploy-web -D deploy.path="../../openmrs-1.8.x/webapp/src/main/webapp"
-
-It will allow you to deploy any changes to your web 
-resources such as jsp or js files without re-installing the module. The deploy path says 
-where OpenMRS is deployed.
+The module providing feed filters to be used with the Atom feed module. The filter strategies are applied
+by the client to filter data pulled from parent.
 
 Installation
 ------------
@@ -28,3 +15,11 @@ If uploads are not allowed from the web (changable via a runtime property), you 
 into the ~/.OpenMRS/modules folder.  (Where ~/.OpenMRS is assumed to be the Application 
 Data Directory that the running openmrs is currently using.)  After putting the file in there 
 simply restart OpenMRS/tomcat and the module will be loaded and started.
+
+How to Use
+----------
+Include the filter strategy component name in the ﻿feedFilterBeans array of the atomfeed configuration on
+the client machine. Available filter strategy names are listed below.
+
+* _atomfeed.locationFeedFilterStrategy_ : Filters visits, encounters, and obs based on location name.
+Provide the location name as the global property _atomfeedfilters.location.name_ value.

@@ -28,66 +28,69 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LocationBasedFilterStrategyTest {
-    private static final String TEST_LOCATION_NAME = "Quelimane";
-
-    @Mock
-    private AdministrationService adminService;
-
-    @Mock
-    private XMLParseService xmlParseService;
-
-    @InjectMocks
-    private LocationBasedFilterStrategy locationBasedFilterStrategy = new LocationBasedFilterStrategy();
-
-    @Before
-    public void setup() throws JAXBException {
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><something>" + TEST_LOCATION_NAME + "</something>";
-        Mockito.when(adminService.getGlobalProperty(Constants.GP_LOCATION_NAME, Constants.ANY_NAME_LOCATION)).thenReturn(TEST_LOCATION_NAME);
-
-        Mockito.when(xmlParseService.createXMLFromFeedFilter(Mockito.any(FeedFilter.class))).thenReturn(xml);
-    }
-
-    @Test
-    public void isTagValidShouldReturnTrueWhenTagIsValid() {
-        assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME));
-        assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME.toUpperCase()));
-        assertFalse(locationBasedFilterStrategy.isFilterTagValid(null));
-        assertFalse(locationBasedFilterStrategy.isFilterTagValid("not-same-as-set"));
-    }
-
-    @Test
-    public void createFilterFeedShouldReturnXmlStringWithCorrectValue() {
-        Location location = new Location();
-        location.setName(TEST_LOCATION_NAME);
-
-        Encounter encounter = new Encounter();
-        encounter.setLocation(location);
-
-        assertTrue(locationBasedFilterStrategy.createFilterFeed(encounter).contains(location.getName()));
-
-        encounter.setLocation(null);
-
-        assertNull(locationBasedFilterStrategy.createFilterFeed(encounter));
-
-        Obs obs = new Obs();
-        obs.setLocation(location);
-        assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
-
-        obs.setLocation(null);
-        encounter.setLocation(location);
-        obs.setEncounter(encounter);
-
-        assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
-
-        obs.setEncounter(null);
-
-        assertNull(locationBasedFilterStrategy.createFilterFeed(obs));
-
-        Visit visit = new Visit();
-        visit.setLocation(location);
-        assertTrue(locationBasedFilterStrategy.createFilterFeed(visit).contains(location.getName()));
-
-        visit.setLocation(null);
-        assertNull(locationBasedFilterStrategy.createFilterFeed(visit));
-    }
+	
+	private static final String TEST_LOCATION_NAME = "Quelimane";
+	
+	@Mock
+	private AdministrationService adminService;
+	
+	@Mock
+	private XMLParseService xmlParseService;
+	
+	@InjectMocks
+	private LocationBasedFilterStrategy locationBasedFilterStrategy = new LocationBasedFilterStrategy();
+	
+	@Before
+	public void setup() throws JAXBException {
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><something>" + TEST_LOCATION_NAME
+		        + "</something>";
+		Mockito.when(adminService.getGlobalProperty(Constants.GP_LOCATION_NAME, Constants.ANY_NAME_LOCATION)).thenReturn(
+		    TEST_LOCATION_NAME);
+		
+		Mockito.when(xmlParseService.createXMLFromFeedFilter(Mockito.any(FeedFilter.class))).thenReturn(xml);
+	}
+	
+	@Test
+	public void isTagValidShouldReturnTrueWhenTagIsValid() {
+		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME));
+		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME.toUpperCase()));
+		assertFalse(locationBasedFilterStrategy.isFilterTagValid(null));
+		assertFalse(locationBasedFilterStrategy.isFilterTagValid("not-same-as-set"));
+	}
+	
+	@Test
+	public void createFilterFeedShouldReturnXmlStringWithCorrectValue() {
+		Location location = new Location();
+		location.setName(TEST_LOCATION_NAME);
+		
+		Encounter encounter = new Encounter();
+		encounter.setLocation(location);
+		
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(encounter).contains(location.getName()));
+		
+		encounter.setLocation(null);
+		
+		assertNull(locationBasedFilterStrategy.createFilterFeed(encounter));
+		
+		Obs obs = new Obs();
+		obs.setLocation(location);
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
+		
+		obs.setLocation(null);
+		encounter.setLocation(location);
+		obs.setEncounter(encounter);
+		
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
+		
+		obs.setEncounter(null);
+		
+		assertNull(locationBasedFilterStrategy.createFilterFeed(obs));
+		
+		Visit visit = new Visit();
+		visit.setLocation(location);
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(visit).contains(location.getName()));
+		
+		visit.setLocation(null);
+		assertNull(locationBasedFilterStrategy.createFilterFeed(visit));
+	}
 }
