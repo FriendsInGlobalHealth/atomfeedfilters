@@ -11,4 +11,12 @@
 	<packaging>jar</packaging>
 	<name>Atom feed filters API</name>
 	<description>API project for Atom feed filters</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>atomfeed-api</artifactId>
+			<version>1.0.12</version>
+		</dependency>
+	</dependencies>
 </project>
