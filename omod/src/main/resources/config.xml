@@ -45,18 +45,11 @@
 	</privilege>
 	 /Required Privileges -->
 
-
-	<!-- Required Global Properties 
 	<globalProperty>
-		<property>@MODULE_ID@.someProperty</property>
-		<defaultValue></defaultValue>
-		<description>
-			A description of the global property goes here.  The description
-			should explain enough for administrators to understand the purpose
-			and possible values for the global property.
-		</description>
+		<property>${project.parent.artifactId}.location.name</property>
+		<defaultValue>*</defaultValue>
+		<description>Name of the location used to filter objects pulled from parent. (* means process everything)</description>
 	</globalProperty>
-	/Required Global Properties -->
 	
 	<!--
 	<dwr>
