@@ -21,5 +21,5 @@ How to Use
 Include the filter strategy component name in the ﻿feedFilterBeans array of the atomfeed configuration on
 the client machine. Available filter strategy names are listed below.
 
-* _atomfeed.locationFeedFilterStrategy_ : Filters visits, encounters, and obs based on location name.
+* _atomfeedFilters.LocationBasedFilterStrategy_ : Filters visits, encounters, and obs based on location name.
 Provide the location name as the global property _atomfeedfilters.location.name_ value.

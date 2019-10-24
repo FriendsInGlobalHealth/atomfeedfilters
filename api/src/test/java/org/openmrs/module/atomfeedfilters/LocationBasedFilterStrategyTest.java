@@ -1,4 +1,4 @@
-package org.openmrs.atomfeedfilters;
+package org.openmrs.module.atomfeedfilters;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +14,6 @@ import org.openmrs.Visit;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.module.atomfeed.api.filter.FeedFilter;
 import org.openmrs.module.atomfeed.api.service.XMLParseService;
-import org.openmrs.module.atomfeedfilters.Constants;
-import org.openmrs.module.atomfeedfilters.LocationBasedFilterStrategy;
 
 import javax.xml.bind.JAXBException;
 

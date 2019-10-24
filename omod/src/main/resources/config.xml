@@ -7,7 +7,7 @@
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
 	<package>org.openmrs.module.atomfeedfilters</package>
-	<author>mhawilamhawila</author>
+	<author>Willa Mhawila</author>
 	<description>
 			${project.parent.description}
 	</description>
@@ -27,9 +27,10 @@
 
 	<aware_of_modules>
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+		<aware_of_module>org.openmrs.module.atomfeed</aware_of_module>
 	</aware_of_modules>
 	
-	
+
 	<!-- AOP
 	<advice>
 		<point>org.openmrs.api.FormService</point>
