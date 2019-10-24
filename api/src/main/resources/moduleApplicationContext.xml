@@ -24,35 +24,4 @@
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
     <context:component-scan base-package="org.openmrs.module.atomfeedfilters" />
-
-    <!-- Wraps AtomfeedfiltersService methods in DB transactions and OpenMRS interceptors,
-    which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="atomfeedfilters.AtomfeedfiltersService"
-            class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager" />
-        </property>
-        <property name="target">
-            <bean class="org.openmrs.module.atomfeedfilters.api.impl.AtomfeedfiltersServiceImpl">
-                <property name="dao" ref="atomfeedfilters.AtomfeedfiltersDao" />
-            </bean>
-        </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors" />
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource" />
-        </property>
-    </bean>
-
-    <!-- Adds AtomfeedfiltersService to OpenMRS context so it can be accessed
-    calling Context.getService(AtomfeedfiltersService.class) -->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.atomfeedfilters.api.AtomfeedfiltersService</value>
-                <ref bean="atomfeedfilters.AtomfeedfiltersService" />
-            </list>
-        </property>
-    </bean>
 </beans>
