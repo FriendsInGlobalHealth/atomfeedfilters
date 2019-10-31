@@ -47,9 +47,17 @@
 	 /Required Privileges -->
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.location.name</property>
+		<property>${project.parent.artifactId}.location.value</property>
 		<defaultValue>*</defaultValue>
-		<description>Name of the location used to filter objects pulled from parent. (* means process everything)</description>
+		<description>
+			A % separated list of location field values used to filter objects pulled from parent. (* means process everything). Example for
+			default county_district%name value can be Quelimane%coalane or Quelimane%* (meaning any value for name field)
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.location.fields</property>
+		<defaultValue>county_district%name</defaultValue>
+		<description>A % separated list of location table fields to be used for filtering, default value is county_district%name</description>
 	</globalProperty>
 	
 	<!--

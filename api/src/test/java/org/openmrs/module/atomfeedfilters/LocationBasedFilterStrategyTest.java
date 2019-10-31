@@ -1,6 +1,5 @@
 package org.openmrs.module.atomfeedfilters;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,14 +19,16 @@ import javax.xml.bind.JAXBException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.openmrs.module.atomfeedfilters.Constants.DEFAULT_LOCATION_FIELDS;
+import static org.openmrs.module.atomfeedfilters.Constants.FIELD_DELIMITER;
+import static org.openmrs.module.atomfeedfilters.Constants.GP_LOCATION_FIELDS;
+import static org.openmrs.module.atomfeedfilters.Constants.GP_LOCATION_FILTERING_VALUE;
 
 /**
  * @uthor Willa Mhawila<a.mhawila@gmail.com> on 10/23/19.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LocationBasedFilterStrategyTest {
-	
-	private static final String TEST_LOCATION_NAME = "Quelimane";
 	
 	@Mock
 	private AdministrationService adminService;
@@ -38,33 +39,43 @@ public class LocationBasedFilterStrategyTest {
 	@InjectMocks
 	private LocationBasedFilterStrategy locationBasedFilterStrategy = new LocationBasedFilterStrategy();
 	
-	@Before
-	public void setup() throws JAXBException {
-		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><something>" + TEST_LOCATION_NAME
-		        + "</something>";
-		Mockito.when(adminService.getGlobalProperty(Constants.GP_LOCATION_NAME, Constants.ANY_NAME_LOCATION)).thenReturn(
-		    TEST_LOCATION_NAME);
-		
-		Mockito.when(xmlParseService.createXMLFromFeedFilter(Mockito.any(FeedFilter.class))).thenReturn(xml);
-	}
-	
 	@Test
 	public void isTagValidShouldReturnTrueWhenTagIsValid() {
-		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME));
-		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_NAME.toUpperCase()));
+		final String TEST_LOCATION_VALUE = "Quelimane%Coalane";
+		Mockito.when(adminService.getGlobalProperty(GP_LOCATION_FILTERING_VALUE, Constants.ANY_VALUE)).thenReturn(
+		    TEST_LOCATION_VALUE);
+		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_VALUE));
+		assertTrue(locationBasedFilterStrategy.isFilterTagValid(TEST_LOCATION_VALUE.toUpperCase()));
 		assertFalse(locationBasedFilterStrategy.isFilterTagValid(null));
 		assertFalse(locationBasedFilterStrategy.isFilterTagValid("not-same-as-set"));
 	}
 	
 	@Test
-	public void createFilterFeedShouldReturnXmlStringWithCorrectValue() {
+	public void isTagValidShouldReturnTrueWhenMatchedAgainstAnyValueInIndividualFields() {
+		Mockito.reset(adminService);
+		Mockito.when(adminService.getGlobalProperty(GP_LOCATION_FILTERING_VALUE, Constants.ANY_VALUE)).thenReturn(
+		    "Quelimane%*");
+		assertTrue(locationBasedFilterStrategy.isFilterTagValid("Quelimane%24julho"));
+		assertFalse(locationBasedFilterStrategy.isFilterTagValid("Namaccura%pebane"));
+	}
+	
+	@Test
+	public void createFilterFeedShouldReturnXmlStringWithCorrectValue() throws JAXBException {
+		Mockito.when(adminService.getGlobalProperty(GP_LOCATION_FIELDS, DEFAULT_LOCATION_FIELDS)).thenReturn(
+		    DEFAULT_LOCATION_FIELDS);
 		Location location = new Location();
-		location.setName(TEST_LOCATION_NAME);
+		final String district = "Quelimane";
+		final String name = "24julho";
+		String expectedFilterValue = new StringBuilder(district).append(FIELD_DELIMITER).append(name).toString();
+		Mockito.when(xmlParseService.createXMLFromFeedFilter(Mockito.any(FeedFilter.class))).thenReturn(
+		    mockXmlFilter(expectedFilterValue));
+		location.setName(name);
+		location.setCountyDistrict(district);
 		
 		Encounter encounter = new Encounter();
 		encounter.setLocation(location);
 		
-		assertTrue(locationBasedFilterStrategy.createFilterFeed(encounter).contains(location.getName()));
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(encounter).contains(expectedFilterValue));
 		
 		encounter.setLocation(null);
 		
@@ -72,13 +83,13 @@ public class LocationBasedFilterStrategyTest {
 		
 		Obs obs = new Obs();
 		obs.setLocation(location);
-		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(expectedFilterValue));
 		
 		obs.setLocation(null);
 		encounter.setLocation(location);
 		obs.setEncounter(encounter);
 		
-		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(location.getName()));
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(obs).contains(expectedFilterValue));
 		
 		obs.setEncounter(null);
 		
@@ -86,9 +97,13 @@ public class LocationBasedFilterStrategyTest {
 		
 		Visit visit = new Visit();
 		visit.setLocation(location);
-		assertTrue(locationBasedFilterStrategy.createFilterFeed(visit).contains(location.getName()));
+		assertTrue(locationBasedFilterStrategy.createFilterFeed(visit).contains(expectedFilterValue));
 		
 		visit.setLocation(null);
 		assertNull(locationBasedFilterStrategy.createFilterFeed(visit));
+	}
+	
+	private String mockXmlFilter(final String filterValue) {
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><something>" + filterValue + "</something>";
 	}
 }
