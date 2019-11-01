@@ -21,5 +21,11 @@ How to Use
 Include the filter strategy component name in the ﻿feedFilterBeans array of the atomfeed configuration on
 the client machine. Available filter strategy names are listed below.
 
-* _atomfeedFilters.LocationBasedFilterStrategy_ : Filters visits, encounters, and obs based on location name.
-Provide the location name as the global property _atomfeedfilters.location.name_ value.
+* _atomfeedFilters.LocationBasedFilterStrategy_ : Filters visits, encounters, and obs based on configured
+location table fields with default fields being county_district and name.
+    * Provide the desired location table fields/column names as a % separated list using the global property
+    _atomfeedfilters.location.fields_; for example _province%county_district%name_
+    * Provide the location name as th eglobal property _atomfeedfilters.location.value_ value which takes the form 
+    _\<field value>%\<field value>%\<field value>_. _\<field value>_ is the actual value of the field to filter against,
+    it can also be _*_ to indicate that any value is accepted. For example, for the default _county_district%name_ fields,
+    the value could be something like _Quelimane%pebane_ or _Quelimane%*_
