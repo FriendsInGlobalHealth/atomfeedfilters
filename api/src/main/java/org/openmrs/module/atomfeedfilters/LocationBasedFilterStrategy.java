@@ -52,8 +52,7 @@ public class LocationBasedFilterStrategy extends FeedFilterStrategy implements G
 			Location location = obs.getLocation();
 			if (location != null) {
 				filter = createLocationFilter(location, LOCATION_FIELDS);
-			}
-			if (obs.getEncounter() != null) {
+			} else if (obs.getEncounter() != null) {
 				location = obs.getEncounter().getLocation();
 				filter = location == null ? null : createLocationFilter(location, LOCATION_FIELDS);
 			}

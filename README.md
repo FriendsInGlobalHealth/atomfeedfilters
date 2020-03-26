@@ -19,7 +19,7 @@ simply restart OpenMRS/tomcat and the module will be loaded and started.
 How to Use
 ----------
 Include the filter strategy component name in the ﻿feedFilterBeans array of the atomfeed configuration on
-the client machine. Available filter strategy names are listed below.
+both the parent and child instances. Available filter strategy names are listed below.
 
 * _atomfeedFilters.LocationBasedFilterStrategy_ : Filters visits, encounters, and obs based on configured
 location table fields with default fields being county_district and name.
@@ -29,3 +29,7 @@ location table fields with default fields being county_district and name.
     _\<field value>%\<field value>%\<field value>_. _\<field value>_ is the actual value of the field to filter against,
     it can also be _*_ to indicate that any value is accepted. For example, for the default _county_district%name_ fields,
     the value could be something like _Quelimane%pebane_ or _Quelimane%*_
+
+####Note
+The values to filter against need be specified only the the child instance. The choice of fields to be used for filtering
+need to be configured on both parent and child instances.
